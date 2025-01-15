@@ -3,26 +3,45 @@ import React, { useState } from "react";
 const TaskForm = ({ addTask }) => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Select Category");
-  const [priority, setPriority] = useState("Set priority");
+  const [priority, setPriority] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
+
+    // Validation
+    if (!title.trim()) {
+      alert("Task title cannot be empty!");
+      return;
+    }
+    if (category === "Select Category") {
+      alert("Please select a valid category!");
+      return;
+    }
+    if (!priority) {
+      alert("Please set a priority for the task!");
+      return;
+    }
+
+    // Add Task
     addTask({
       id: Date.now(),
       title,
       category,
       priority,
-      status: "In Progress",
+      status: "Pending", // Default status
     });
+
+    // Reset fields
     setTitle("");
+    setCategory("Select Category");
+    setPriority("");
   };
 
   return (
     <div className="task-form-container">
-     {/* Subheading */}
-     <h2 className="task-form-heading">Add Task</h2>
-      
+      {/* Subheading */}
+      <h2 className="task-form-heading">Add Task</h2>
+
       {/* Form */}
       <form onSubmit={handleSubmit} className="task-form">
         <input
@@ -68,7 +87,9 @@ const TaskForm = ({ addTask }) => {
             High
           </label>
         </div>
-        <button type="submit" className="add-task-button">Add Task</button>
+        <button type="submit" className="add-task-button">
+          Add Task
+        </button>
       </form>
     </div>
   );

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import ThemeToggle from "./ThemeToggle";
-import FilterTask from "./FilterTask"; // Import FilterTask component
-import "../TaskManager.css";
+import FilterTask from "./FilterTask";
 
 const AutoWisdomTaskManager = () => {
   const [tasks, setTasks] = useState([]);

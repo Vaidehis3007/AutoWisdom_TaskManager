@@ -1,48 +1,66 @@
 import React from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const TaskList = ({ tasks, updateTaskStatus, deleteTask }) => {
+const TaskList = ({ tasks, updateTaskStatus }) => {
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
+
+    // If dropped outside any column
+    if (!destination) return;
+
+    // If dropped in the same column, no action needed
+    if (source.droppableId === destination.droppableId) return;
+
+    // Update task status
+    const taskId = result.draggableId;
+    updateTaskStatus(taskId, destination.droppableId);
+  };
+
+  const columns = {
+    Pending: tasks.filter((task) => task.status === "Pending"),
+    "In Progress": tasks.filter((task) => task.status === "In Progress"),
+    Completed: tasks.filter((task) => task.status === "Completed"),
+  };
+
   return (
-    <div className="task-form-container">
-      <div className="task-list-heading">
-      <h2 className="task-list-heading">List of Tasks</h2>
-      </div>
-      {/* Dropdown lists */}
-      <div className="task-form">
-        <select>
-        <option value="Select">Select</option>
-          <option value="Backend">Backend</option>
-          <option value="Frontend">Frontend</option>
-          <option value="Design">Design</option>
-        </select>
-        <select>
-        <option value="Select">Select</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-          <option value="Pending">Pending</option>
-        </select>
-      </div>
-
-      {/* Task List */}
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <h3>{task.title}</h3>
-            <p>Category: {task.category}</p>
-            <p>Priority: {task.priority}</p>
-            <p>Status: {task.status}</p>
-            <button onClick={() => updateTaskStatus(task.id, "Completed")}>
-              Mark Completed
-            </button>
-            <button onClick={() => updateTaskStatus(task.id, "In Progress")}>
-              Mark In Progress
-            </button>
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
-          </li>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="task-list-container">
+        {Object.keys(columns).map((columnId) => (
+          <Droppable droppableId={columnId} key={columnId}>
+            {(provided) => (
+              <div
+                className="task-column"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <h3>{columnId}</h3>
+                {columns[columnId].map((task, index) => (
+                  <Draggable
+                    key={task.id}
+                    draggableId={task.id.toString()}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        className="task-item"
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <h4>{task.title}</h4>
+                        <p>Category: {task.category}</p>
+                        <p>Priority: {task.priority}</p>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         ))}
-      </ul>
-
-      <button type="submit" className="show-task-button"> Show Task </button>
-    </div>
+      </div>
+    </DragDropContext>
   );
 };
 

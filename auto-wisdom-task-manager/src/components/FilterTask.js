@@ -2,8 +2,8 @@ import React from "react";
 
 const FilterTask = ({ filter, setFilter }) => {
   // Possible categories and statuses
-  const categories = ["All", "Backend", "Frontend", "Design"];
-  const statuses = ["All", "In Progress", "Completed", "Pending"];
+  const categories = ["All", "Backend", "Frontend", "API"];
+  const statuses = ["All", "Pending", "In Progress", "Completed"];
 
   return (
     <div className="filter-task-container">
