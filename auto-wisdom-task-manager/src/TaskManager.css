@@ -339,9 +339,8 @@ header {
   .filter-button:hover {
     background-color: #22c55e;
   } 
-  
-   footer{
-    padding: 20px;
+  .dark-theme .filter-button:hover {
+    background-color: #22c55e;
   } 
   @media (max-width: 768px) {
     .columns-container {
