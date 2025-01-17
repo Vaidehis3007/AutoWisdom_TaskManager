@@ -56,7 +56,7 @@ const TaskForm = ({ addTask }) => {
           </option>
           <option value="Frontend">Frontend</option>
           <option value="Backend">Backend</option>
-          <option value="API Integration">API Integration</option>
+          <option value="API">API</option>
         </select>
         <div className="task-priority">
           <label>
