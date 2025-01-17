@@ -3,64 +3,104 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const TaskList = ({ tasks, updateTaskStatus }) => {
   const handleDragEnd = (result) => {
-    const { source, destination } = result;
+    // Detailed logging of the drag result
+    console.log('Drag end result:', {
+      draggableId: result.draggableId,
+      source: result.source,
+      destination: result.destination,
+      type: result.type,
+      reason: result.reason,
+      mode: result.mode,
+      fullResult: result
+    });
 
-    // If dropped outside any column
-    if (!destination) return;
+    const { source, destination, draggableId } = result;
 
-    // If dropped in the same column, no action needed
-    if (source.droppableId === destination.droppableId) return;
+    // Log if destination is null
+    if (!destination) {
+      console.log('No destination provided - drop was cancelled or outside valid drop target');
+      return;
+    }
 
-    // Update task status
-    const taskId = result.draggableId;
-    updateTaskStatus(taskId, destination.droppableId);
+    // Log if it's a same-position drop
+    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+      console.log('Dropped in the same position - no update needed');
+      return;
+    }
+
+    // Log the status update attempt
+    console.log('Attempting to update task status:', {
+      taskId: draggableId,
+      fromStatus: source.droppableId,
+      toStatus: destination.droppableId,
+      fromIndex: source.index,
+      toIndex: destination.index
+    });
+
+    updateTaskStatus(draggableId, destination.droppableId);
   };
 
-  const columns = {
-    Pending: tasks.filter((task) => task.status === "Pending"),
-    "In Progress": tasks.filter((task) => task.status === "In Progress"),
-    Completed: tasks.filter((task) => task.status === "Completed"),
+  // Add logging to track what tasks are in each column
+  const getColumnTasks = (status) => {
+    const filteredTasks = tasks.filter((task) => task.status === status);
+    console.log(`Tasks in ${status}:`, filteredTasks);
+    return filteredTasks;
   };
+
+  const columns = [
+    { id: "Pending", title: "Pending" },
+    { id: "In Progress", title: "In Progress" },
+    { id: "Completed", title: "Completed" }
+  ];
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="task-list-container">
-        {Object.keys(columns).map((columnId) => (
-          <Droppable droppableId={columnId} key={columnId}>
-            {(provided) => (
-              <div
-                className="task-column"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                <h3>{columnId}</h3>
-                {columns[columnId].map((task, index) => (
-                  <Draggable
-                    key={task.id}
-                    draggableId={task.id.toString()}
-                    index={index}
+    <div className="task-manager">
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="columns-container">
+          {columns.map((column) => (
+            <div key={column.id} className="column">
+              <h3 className="column-title">{column.title}</h3>
+              <Droppable droppableId={column.id}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`droppable-area ${
+                      snapshot.isDraggingOver ? 'dragging-over' : ''
+                    }`}
+                    style={{ minHeight: '200px' }} // Ensure drop area is visible
                   >
-                    {(provided) => (
-                      <div
-                        className="task-item"
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
+                    {getColumnTasks(column.id).map((task, index) => (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id.toString()}
+                        index={index}
                       >
-                        <h4>{task.title}</h4>
-                        <p>Category: {task.category}</p>
-                        <p>Priority: {task.priority}</p>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ))}
-      </div>
-    </DragDropContext>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={`task-card ${
+                              snapshot.isDragging ? 'dragging' : ''
+                            }`}
+                          >
+                            <h4 className="task-title">{task.title}</h4>
+                            <p className="task-detail">Category: {task.category}</p>
+                            <p className="task-detail">Priority: {task.priority}</p>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
+          ))}
+        </div>
+      </DragDropContext>
+    </div>
   );
 };
 

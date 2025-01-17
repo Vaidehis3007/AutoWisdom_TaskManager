@@ -14,8 +14,12 @@ const AutoWisdomTaskManager = () => {
   };
 
   const updateTaskStatus = (id, status) => {
+    const numericId = parseInt(id, 10);
+    
     setTasks(
-      tasks.map((task) => (task.id === id ? { ...task, status } : task))
+      tasks.map((task) => 
+        task.id === numericId ? { ...task, status } : task
+      )
     );
   };
 
