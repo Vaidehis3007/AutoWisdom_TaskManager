@@ -87,6 +87,9 @@ header {
   .dark-theme .login-button{
     background-color: black;
   }
+  .dark-theme .login-button:hover{
+    background-color: #22c55e;
+  }
 
 /* TaskList.css */
 .task-manager {
