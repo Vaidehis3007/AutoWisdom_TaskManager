@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import ThemeToggle from "./ThemeToggle";
@@ -6,8 +7,8 @@ import FilterTask from "./FilterTask";
 
 const AutoWisdomTaskManager = () => {
   const [tasks, setTasks] = useState([]);
-  const [theme, setTheme] = useState(false); // false = light, true = dark
-  const [filter, setFilter] = useState({ category: "All", status: "All" }); // Initialize filter state
+  const [theme, setTheme] = useState("light");
+  const [filter, setFilter] = useState({ category: "All", status: "All" }); 
 
   const addTask = (task) => {
     setTasks([...tasks, task]);
@@ -27,7 +28,19 @@ const AutoWisdomTaskManager = () => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  // Apply filters
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.body.className = `${savedTheme}-theme`;
+    setTheme(savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    document.body.className = `${newTheme}-theme`;
+    localStorage.setItem("theme", newTheme);
+    setTheme(newTheme);
+  };
+
   const filteredTasks = tasks.filter((task) => {
     return (
       (filter.category === "All" || task.category === filter.category) &&
@@ -36,7 +49,7 @@ const AutoWisdomTaskManager = () => {
   });
 
   return (
-    <div className={theme ? "dark-theme" : "light-theme"}>
+    <div className={theme === "dark" ? "dark-theme" : "light-theme"}>
       {/* Navbar */}
       <header className="navbar">
         <div className="navbar-brand">
@@ -44,7 +57,7 @@ const AutoWisdomTaskManager = () => {
         </div>
         <div className="navbar-actions">
           <button className="login-button">Login</button>
-          <ThemeToggle toggleTheme={() => setTheme(!theme)} />
+          <ThemeToggle toggleTheme={toggleTheme} />
         </div>
       </header>
 
