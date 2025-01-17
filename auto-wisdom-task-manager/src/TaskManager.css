@@ -74,6 +74,20 @@ header {
     color: white;
   }
 
+  .dark-theme .task-card {
+  background-color: black;
+  color: white;
+  }
+
+  .dark-theme input, .dark-theme select {
+    background-color: black;
+    color: white;
+    border: 1px solid teal;
+  }
+
+  .dark-theme .login-button{
+    background-color: black;
+  }
 /* TaskList.css */
 .task-manager {
   padding: 20px;
