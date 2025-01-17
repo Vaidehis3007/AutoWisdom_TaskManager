@@ -82,12 +82,12 @@ header {
   .dark-theme input, .dark-theme select {
     background-color: black;
     color: white;
-    border: 1px solid teal;
+    border: 2px solid teal;
   }
-
   .dark-theme .login-button{
     background-color: black;
   }
+
 /* TaskList.css */
 .task-manager {
   padding: 20px;
@@ -178,33 +178,25 @@ header {
 .add-task-button {
   width: 100%;
   padding: 12px;
+  margin: 5px;
   background-color: #008B8B;
-  color: white;
+  color: #ffff;
   border: none;
   border-radius: 4px;
+  cursor: pointer; 
+  padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+.dark-theme .add-task-button{
+  background-color: #0000;
+  border: 2px solid #008B8B;
 }
 
 .add-task-button:hover {
   background-color: #22c55e;
 }
-  
-  button {
-    background-color: teal; 
-    color: #ffff;
-    border: none; 
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    margin: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #22c55e;
-  } 
 
 /*Theme Toggle Button */
   .theme-toggle {
@@ -318,15 +310,27 @@ header {
   .filter-button {
     padding: 8px 16px;
     font-size: 0.9rem;
+    margin: 5px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: teal; 
+    color: #ffff;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  .dark-theme .filter-button{
+    background-color: #0000;
+    border: 2px solid #008B8B;
   }
   
   .filter-button.active {
     background-color: teal;
     color: white;
+  }
+  .dark-theme .filter-button.active{
+    background-color: #0000;
+    border: 2px solid #008B8B;
   }
   
   .filter-button:hover {
